@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Todo, TodoStatus } from "src/types.ts";
+import type { Todo, TodoStatus } from "src/types";
 import { reactive, ref } from "vue";
 import useTodos from "@/store/useTodos";
 
