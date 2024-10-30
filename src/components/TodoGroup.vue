@@ -3,31 +3,35 @@ import { TodoStatus } from "@/types";
 import Draggable from "vuedraggable";
 import useTodos from "@/store/useTodos";
 import CreateTodo from "./CreateTodo.vue";
-import { computed, ref } from "vue";
-import { watch } from "vue";
+import { computed, ref, defineProps } from "vue";
 
 interface Props {
   status: TodoStatus;
+  selectedTags: string[];
 }
 
 const props = defineProps<Props>();
 
 const { getTodosByStatus, deleteTodo, updateTodo } = useTodos();
-const todoList = ref(getTodosByStatus(props.status).value);
-
-watch(
-  () => getTodosByStatus(props.status).value,
-  (newTodos) => {
-    todoList.value = newTodos;
-  }
-);
-
+const todoList = computed(() => getTodosByStatus(props.status).value);
 
 const groupLabel = {
   [TodoStatus.Pending]: "Pending",
   [TodoStatus.InProgress]: "In Progress",
   [TodoStatus.Completed]: "Completed",
 };
+
+const isTodoVisible = (todo: any) => {
+  return props.selectedTags.length === 0 || todo.tag.some((tag: string) => props.selectedTags.includes(tag));
+};
+
+const sortedTodoList = computed(() => {
+  return todoList.value.sort((a, b) => {
+    const aVisible = isTodoVisible(a);
+    const bVisible = isTodoVisible(b);
+    return (aVisible === bVisible) ? 0 : (aVisible ? -1 : 1);
+  });
+});
 
 const newTags = ref<{ [key: number]: string }>({});
 
@@ -50,14 +54,9 @@ const removeTag = (todo: any, index: number) => {
 };
 
 const onDraggableChange = (payload: any) => {
-  const movedTodo = payload?.added?.element;
-  if (movedTodo && movedTodo.status !== props.status) {
-    const todoCopy = { ...movedTodo, status: props.status };
-
-    updateTodo(todoCopy, props.status);
+  if (payload?.added?.element?.status !== props.status) {
   }
 };
-
 </script>
 
 <template>
@@ -65,16 +64,16 @@ const onDraggableChange = (payload: any) => {
     <h3>{{ groupLabel[props.status] }}</h3>
 
     <Draggable
-    class="draggable"
-    :list="todoList"
-    group="todos"
-    itemKey="id"
-    @change="onDraggableChange"
-  >
-    <template #item="{ element: todo }">
-      <li :key="todo.id">
-        {{ todo.title }}
-        <span class="delete-icon" @click="() => deleteTodo(todo)">x</span>
+      class="draggable"
+      :list="sortedTodoList"
+      group="todos"
+      itemKey="id"
+      @change="onDraggableChange"
+    >
+      <template #item="{ element: todo }">
+        <li :class="{ 'darkened': !isTodoVisible(todo) }">
+          {{ todo.title }}
+          <span class="delete-icon" @click="() => deleteTodo(todo)">x</span>
           <div>
             <span class="todo-description">{{ todo.description }}</span>
           </div>
@@ -111,6 +110,12 @@ const onDraggableChange = (payload: any) => {
   padding: 2px 5px;
   cursor: grab;
   margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.darkened {
+  opacity: 0.5;
+  background-color: #a62626;
 }
 
 .draggable {

@@ -1,13 +1,20 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { TodoStatus } from "@/types";
 import TodoGroup from "./TodoGroup.vue";
+import FilterBar from "./FilterBar.vue";
+
+const selectedTags = ref<string[]>([]);
 </script>
 
 <template>
+  <div>
+    <FilterBar v-model:selectedTags="selectedTags"/>
+  </div>
   <div class="groups-wrapper">
-    <TodoGroup :status="TodoStatus.Pending" />
-    <TodoGroup :status="TodoStatus.InProgress" />
-    <TodoGroup :status="TodoStatus.Completed" />
+    <TodoGroup :status="TodoStatus.Pending" :selectedTags="selectedTags" />
+    <TodoGroup :status="TodoStatus.InProgress" :selectedTags="selectedTags" />
+    <TodoGroup :status="TodoStatus.Completed" :selectedTags="selectedTags" />
   </div>
 </template>
 
