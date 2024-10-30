@@ -23,7 +23,7 @@ const loadTodosFromLocalStorage = (): TodoStore => {
         title: "Job search",
         description: "Find a job as a Front-End Developer",
         status: TodoStatus.Pending,
-        tag: [""],
+        tag: [],
       },
     ],
     [TodoStatus.InProgress]: [],

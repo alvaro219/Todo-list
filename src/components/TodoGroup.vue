@@ -114,8 +114,8 @@ const onDraggableChange = (payload: any) => {
 }
 
 .darkened {
-  opacity: 0.5;
-  background-color: #a62626;
+  opacity: 0.5 !important;
+  background-color: #a62626 !important;
 }
 
 .draggable {
