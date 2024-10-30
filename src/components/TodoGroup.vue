@@ -3,6 +3,8 @@ import { TodoStatus } from "@/types";
 import Draggable from "vuedraggable";
 import useTodos from "@/store/useTodos";
 import CreateTodo from "./CreateTodo.vue";
+import { ref } from "vue";
+
 interface Props {
   status: TodoStatus;
 }
@@ -17,6 +19,24 @@ const groupLabel = {
   [TodoStatus.InProgress]: "In Progress",
   [TodoStatus.Completed]: "Completed",
 };
+
+const newTags = ref<{ [key: number]: string }>({});
+
+const addTag = (todo: any) => {
+  if (newTags.value[todo.id]) {
+    if (!Array.isArray(todo.tag))
+      todo.tag = [];
+  }
+  todo.tag.push(newTags.value[todo.id]);
+  updateTodo(todo, props.status);
+
+  newTags.value[todo.id] = "";
+}
+
+const removeTag = (todo: any, index: number) => {
+  todo.tag.splice(index, 1);
+  updateTodo(todo, props.status);
+}
 
 const onDraggableChange = (payload: any) => {
   if (payload?.added?.element?.status) {
@@ -42,6 +62,16 @@ const onDraggableChange = (payload: any) => {
           <span class="delete-icon" @click="deleteTodo(todo)">x</span>
           <div>
             <span class="todo-description">{{ todo.description }}</span>
+          </div>
+          <div>
+            <span class="todo-tag" v-for="(tag, index) in todo.tag" :key="index">
+              {{ tag }}
+              <button @click="removeTag(todo, index)">x</button>
+            </span>            
+          </div>
+          <div>
+            <input type="text" v-model="newTags[todo.id]" placeholder="Add new tag"/>
+            <button @click="addTag(todo)">Add Tag</button>
           </div>
         </li>
       </template>
@@ -75,6 +105,10 @@ const onDraggableChange = (payload: any) => {
 .delete-icon {
   float: right;
   cursor: pointer;
+}
+
+.todo-tag {
+  font-size: 12px;
 }
 
 .todo-description {

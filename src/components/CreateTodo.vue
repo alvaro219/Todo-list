@@ -15,12 +15,14 @@ const newTodo = reactive<Omit<Todo, "id">>({
   title: "",
   description: "",
   status: props.status,
+  tag: [],
 });
 
 const resetForm = () => {
   shouldDisplayForm.value = false;
   newTodo.title = "";
   newTodo.description = "";
+  newTodo.tag = [];
 };
 
 const handleOnSubmit = () => {
@@ -35,7 +37,8 @@ const handleOnSubmit = () => {
 
 <template>
   <div>
-    <h3
+    <h3 
+      style="cursor: pointer"
       v-if="!shouldDisplayForm"
       @click="shouldDisplayForm = !shouldDisplayForm"
     >
@@ -45,6 +48,9 @@ const handleOnSubmit = () => {
       <form @submit.prevent="handleOnSubmit">
         <div>
           <input type="text" placeholder="Title" v-model="newTodo.title" />
+        </div>
+        <div>
+          <input type="text" placeholder="Tag" v-model="newTodo.tag" />
         </div>
         <div>
           <textarea
