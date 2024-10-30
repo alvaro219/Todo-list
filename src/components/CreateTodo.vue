@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Todo, TodoStatus } from "src/types";
-import { reactive, ref } from "vue";
+import { reactive, ref, computed } from "vue";
 import useTodos from "@/store/useTodos";
 
 interface Props {
@@ -16,6 +16,13 @@ const newTodo = reactive<Omit<Todo, "id">>({
   description: "",
   status: props.status,
   tag: [],
+});
+
+const tagInput = computed({
+  get: () => newTodo.tag.join(", "), 
+  set: (value: string) => {
+    newTodo.tag = value.split(",").map((tag) => tag.trim()).filter(tag => tag !== "");
+  },
 });
 
 const resetForm = () => {
@@ -48,16 +55,16 @@ const handleOnSubmit = () => {
       <form @submit.prevent="handleOnSubmit">
         <div>
           <input type="text" placeholder="Title" v-model="newTodo.title" />
-        </div>
-        <div>
-          <input type="text" placeholder="Tag" v-model="newTodo.tag" />
-        </div>
+        </div>        
         <div>
           <textarea
             type="text"
-            placeholder="Title"
+            placeholder="Description"
             v-model="newTodo.description"
           />
+        </div>
+        <div>
+          <input type="text" placeholder="Tag" v-model="tagInput" />
         </div>
 
         <button type="submit">Submit</button>

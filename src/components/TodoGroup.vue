@@ -3,7 +3,7 @@ import { TodoStatus } from "@/types";
 import Draggable from "vuedraggable";
 import useTodos from "@/store/useTodos";
 import CreateTodo from "./CreateTodo.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 interface Props {
   status: TodoStatus;
@@ -12,7 +12,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const { getTodosByStatus, deleteTodo, updateTodo } = useTodos();
-const todoList = getTodosByStatus(props.status);
+const todoList = computed(() => getTodosByStatus(props.status).value); // Forzamos la actualización
 
 const groupLabel = {
   [TodoStatus.Pending]: "Pending",
@@ -31,16 +31,15 @@ const addTag = (todo: any) => {
   updateTodo(todo, props.status);
 
   newTags.value[todo.id] = "";
-}
+};
 
 const removeTag = (todo: any, index: number) => {
   todo.tag.splice(index, 1);
   updateTodo(todo, props.status);
-}
+};
 
 const onDraggableChange = (payload: any) => {
-  if (payload?.added?.element?.status) {
-    updateTodo(payload?.added?.element, props.status);
+  if (payload?.added?.element?.status !== props.status) {
   }
 };
 </script>
@@ -59,7 +58,7 @@ const onDraggableChange = (payload: any) => {
       <template #item="{ element: todo }">
         <li>
           {{ todo.title }}
-          <span class="delete-icon" @click="deleteTodo(todo)">x</span>
+          <span class="delete-icon" @click="() => deleteTodo(todo)">x</span>
           <div>
             <span class="todo-description">{{ todo.description }}</span>
           </div>

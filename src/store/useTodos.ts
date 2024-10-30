@@ -1,5 +1,5 @@
 import { TodoStatus, type Todo } from "../types";
-import { reactive, computed } from "vue";
+import { reactive, computed, watch } from "vue";
 
 interface TodoStore {
   [TodoStatus.Pending]: Todo[];
@@ -7,20 +7,41 @@ interface TodoStore {
   [TodoStatus.Completed]: Todo[];
 }
 
-const defaultVal = {
-  [TodoStatus.Pending]: [
-    {
-      id: 1,
-      title: "Job search",
-      description: "Find a job as a Front-End Developer",
-      status: TodoStatus.Pending,
-    },
-  ],
-  [TodoStatus.InProgress]: [],
-  [TodoStatus.Completed]: [],
+const loadTodosFromLocalStorage = (): TodoStore => {
+  const savedTodos = localStorage.getItem("todos");
+  if (savedTodos) {
+    try {
+      return JSON.parse(savedTodos);
+    } catch (e) {
+      console.error("Error parsing todos from localStorage:", e);
+    }
+  }
+  return {
+    [TodoStatus.Pending]: [
+      {
+        id: 1,
+        title: "Job search",
+        description: "Find a job as a Front-End Developer",
+        status: TodoStatus.Pending,
+        tag: [""],
+      },
+    ],
+    [TodoStatus.InProgress]: [],
+    [TodoStatus.Completed]: [],
+  };
 };
 
-const todoStore = reactive<TodoStore>(defaultVal);
+const todoStore = reactive<TodoStore>(loadTodosFromLocalStorage());
+
+const saveTodosToLocalStorage = () => {
+  localStorage.setItem("todos", JSON.stringify(todoStore));
+};
+
+watch(
+  () => todoStore,
+  saveTodosToLocalStorage,
+  { deep: true }
+);
 
 export default () => {
   const getTodosByStatus = (todoStatus: TodoStatus) => {
@@ -28,7 +49,10 @@ export default () => {
   };
 
   const updateTodo = (todo: Todo, newStatus: TodoStatus) => {
+    if (todo.status === newStatus) return; // Solo actualiza si el estado cambia
+    todoStore[todo.status] = todoStore[todo.status].filter((t) => t.id !== todo.id);
     todo.status = newStatus;
+    todoStore[newStatus].push(todo);
   };
 
   const addNewTodo = (todo: Todo) => {
@@ -39,7 +63,9 @@ export default () => {
     todoStore[todoToDelete.status] = todoStore[todoToDelete.status].filter(
       (todo) => todo.id !== todoToDelete.id
     );
-  };
+    saveTodosToLocalStorage(); // Fuerza la actualización del localStorage
+};
+
 
   return { getTodosByStatus, addNewTodo, deleteTodo, updateTodo };
 };
