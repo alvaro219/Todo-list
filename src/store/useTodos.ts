@@ -48,12 +48,22 @@ export default () => {
     return computed(() => todoStore[todoStatus]);
   };
 
-  const updateTodo = (todo: Todo, newStatus: TodoStatus) => {
-    if (todo.status === newStatus) return; // Solo actualiza si el estado cambia
-    todoStore[todo.status] = todoStore[todo.status].filter((t) => t.id !== todo.id);
-    todo.status = newStatus;
-    todoStore[newStatus].push(todo);
+  const updateTodo = (todo: Todo, newStatus?: TodoStatus) => {
+    if (newStatus && todo.status !== newStatus) {
+      todoStore[todo.status] = todoStore[todo.status].filter((t) => t.id !== todo.id);
+  
+      const todoCopy = { ...todo, status: newStatus };
+  
+      todoStore[newStatus].push(todoCopy);
+    } else {
+      const index = todoStore[todo.status].findIndex((t) => t.id === todo.id);
+      if (index !== -1) {
+        todoStore[todo.status][index] = { ...todo };
+      }
+    }
   };
+  
+  
 
   const addNewTodo = (todo: Todo) => {
     todoStore[todo.status].push(todo);
@@ -63,9 +73,10 @@ export default () => {
     todoStore[todoToDelete.status] = todoStore[todoToDelete.status].filter(
       (todo) => todo.id !== todoToDelete.id
     );
-    saveTodosToLocalStorage(); // Fuerza la actualización del localStorage
-};
-
+  
+    saveTodosToLocalStorage();
+  };
+  
 
   return { getTodosByStatus, addNewTodo, deleteTodo, updateTodo };
 };

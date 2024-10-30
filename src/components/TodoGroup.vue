@@ -4,6 +4,7 @@ import Draggable from "vuedraggable";
 import useTodos from "@/store/useTodos";
 import CreateTodo from "./CreateTodo.vue";
 import { computed, ref } from "vue";
+import { watch } from "vue";
 
 interface Props {
   status: TodoStatus;
@@ -12,7 +13,15 @@ interface Props {
 const props = defineProps<Props>();
 
 const { getTodosByStatus, deleteTodo, updateTodo } = useTodos();
-const todoList = computed(() => getTodosByStatus(props.status).value); // Forzamos la actualización
+const todoList = ref(getTodosByStatus(props.status).value);
+
+watch(
+  () => getTodosByStatus(props.status).value,
+  (newTodos) => {
+    todoList.value = newTodos;
+  }
+);
+
 
 const groupLabel = {
   [TodoStatus.Pending]: "Pending",
@@ -24,24 +33,31 @@ const newTags = ref<{ [key: number]: string }>({});
 
 const addTag = (todo: any) => {
   if (newTags.value[todo.id]) {
-    if (!Array.isArray(todo.tag))
+    if (!Array.isArray(todo.tag)) {
       todo.tag = [];
+    }
+    if (!todo.tag.includes(newTags.value[todo.id])) {
+      todo.tag.push(newTags.value[todo.id]);
+      updateTodo(todo);
+    }
+    newTags.value[todo.id] = "";
   }
-  todo.tag.push(newTags.value[todo.id]);
-  updateTodo(todo, props.status);
-
-  newTags.value[todo.id] = "";
 };
 
 const removeTag = (todo: any, index: number) => {
   todo.tag.splice(index, 1);
-  updateTodo(todo, props.status);
+  updateTodo(todo);
 };
 
 const onDraggableChange = (payload: any) => {
-  if (payload?.added?.element?.status !== props.status) {
+  const movedTodo = payload?.added?.element;
+  if (movedTodo && movedTodo.status !== props.status) {
+    const todoCopy = { ...movedTodo, status: props.status };
+
+    updateTodo(todoCopy, props.status);
   }
 };
+
 </script>
 
 <template>
@@ -49,16 +65,16 @@ const onDraggableChange = (payload: any) => {
     <h3>{{ groupLabel[props.status] }}</h3>
 
     <Draggable
-      class="draggable"
-      :list="todoList"
-      group="todos"
-      itemKey="id"
-      @change="onDraggableChange"
-    >
-      <template #item="{ element: todo }">
-        <li>
-          {{ todo.title }}
-          <span class="delete-icon" @click="() => deleteTodo(todo)">x</span>
+    class="draggable"
+    :list="todoList"
+    group="todos"
+    itemKey="id"
+    @change="onDraggableChange"
+  >
+    <template #item="{ element: todo }">
+      <li :key="todo.id">
+        {{ todo.title }}
+        <span class="delete-icon" @click="() => deleteTodo(todo)">x</span>
           <div>
             <span class="todo-description">{{ todo.description }}</span>
           </div>
