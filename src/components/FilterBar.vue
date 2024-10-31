@@ -36,7 +36,7 @@ const filteredTodos = computed(() => {
 });
 
 const addTagToFilter = (tag: string) => {
-  if (!selectedTags.value!.includes(tag)) {
+  if (tag && !selectedTags.value!.includes(tag)) {
     selectedTags.value!.push(tag);
   }
 };
@@ -51,12 +51,25 @@ watch(searchTerm, (newSearch) => {
     searchTerm.value = "";
   }
 });
+
+const handleEnterKey = (event: KeyboardEvent) => {
+  if (event.key === "Enter") {
+    addTagToFilter(searchTerm.value);
+    searchTerm.value = ""; 
+  }
+};
 </script>
 
 <template>
   <div class="searcher-bar">
     <div class="searcher-box">
-      <input class="searcher-container" type="text" v-model="searchTerm" placeholder="Search any Tag" />
+      <input 
+        class="searcher-container" 
+        type="text" 
+        v-model="searchTerm" 
+        placeholder="Search any Tag" 
+        @keyup="handleEnterKey"
+      />
       <button class="button-container" @click="addTagToFilter(searchTerm)">Add Tag</button>
     </div>
     <div class="selected-tags">

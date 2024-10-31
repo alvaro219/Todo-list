@@ -57,6 +57,13 @@ const onDraggableChange = (payload: any) => {
   if (payload?.added?.element?.status !== props.status) {
   }
 };
+
+// Nueva función para manejar Enter en el campo de entrada
+const handleEnterKey = (event: KeyboardEvent, todo: any) => {
+  if (event.key === "Enter") {
+    addTag(todo);
+  }
+};
 </script>
 
 <template>
@@ -84,7 +91,13 @@ const onDraggableChange = (payload: any) => {
             </span>            
           </div>
           <div>
-            <input type="text" v-model="newTags[todo.id]" placeholder="Add new tag"/>
+            <!-- Agregamos el evento keyup para escuchar Enter y ejecutar addTag -->
+            <input 
+              type="text" 
+              v-model="newTags[todo.id]" 
+              placeholder="Add new tag" 
+              @keyup="handleEnterKey($event, todo)"
+            />
             <button @click="addTag(todo)">Add Tag</button>
           </div>
         </li>
@@ -96,7 +109,6 @@ const onDraggableChange = (payload: any) => {
     </div>
   </div>
 </template>
-
 
 <style scoped>
 .group-wrapper {
