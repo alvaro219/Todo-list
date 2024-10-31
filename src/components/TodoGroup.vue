@@ -29,7 +29,7 @@ const sortedTodoList = computed(() => {
   return todoList.value.sort((a, b) => {
     const aVisible = isTodoVisible(a);
     const bVisible = isTodoVisible(b);
-    return (aVisible === bVisible) ? 0 : (aVisible ? -1 : 1);
+    return aVisible === bVisible ? 0 : aVisible ? -1 : 1;
   });
 });
 
@@ -115,7 +115,7 @@ const onDraggableChange = (payload: any) => {
 
 .darkened {
   opacity: 0.5 !important;
-  background-color: #a62626 !important;
+  background-color: grey !important;
 }
 
 .draggable {

@@ -9,9 +9,10 @@ const selectedTags = ref<string[]>([]);
 
 <template>
   <div>
-    <FilterBar v-model:selectedTags="selectedTags"/>
+    
   </div>
   <div class="groups-wrapper">
+    <FilterBar v-model:selectedTags="selectedTags"/>
     <TodoGroup :status="TodoStatus.Pending" :selectedTags="selectedTags" />
     <TodoGroup :status="TodoStatus.InProgress" :selectedTags="selectedTags" />
     <TodoGroup :status="TodoStatus.Completed" :selectedTags="selectedTags" />

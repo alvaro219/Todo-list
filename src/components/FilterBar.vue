@@ -6,7 +6,7 @@ import { TodoStatus } from "@/types";
 const { getTodosByStatus } = useTodos();
 
 const searchTerm = ref("");
-const selectedTags = ref<string[]>([]);
+const selectedTags = defineModel<string[]>("selectedTags");
 
 const groupLabel = {
   [TodoStatus.Pending]: "Pending",
@@ -29,20 +29,20 @@ const availableTags = computed(() => {
 });
 
 const filteredTodos = computed(() => {
-  if (selectedTags.value.length === 0) return allTodos.value;
+  if (selectedTags.value!.length === 0) return allTodos.value;
   return allTodos.value.filter(todo =>
-    selectedTags.value.every(tag => todo.tag.includes(tag))
+    selectedTags.value!.every(tag => todo.tag.includes(tag))
   );
 });
 
 const addTagToFilter = (tag: string) => {
-  if (!selectedTags.value.includes(tag)) {
-    selectedTags.value.push(tag);
+  if (!selectedTags.value!.includes(tag)) {
+    selectedTags.value!.push(tag);
   }
 };
 
 const removeTagFromFilter = (tag: string) => {
-  selectedTags.value = selectedTags.value.filter(t => t !== tag);
+  selectedTags.value = selectedTags.value!.filter(t => t !== tag);
 };
 
 watch(searchTerm, (newSearch) => {
