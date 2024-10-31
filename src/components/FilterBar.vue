@@ -21,11 +21,12 @@ const allTodos = computed(() => {
 });
 
 const availableTags = computed(() => {
-  const tagsSet = new Set<string>();
-  allTodos.value.forEach(todo => {
-    todo.tag.forEach(tag => tagsSet.add(tag));
-  });
-  return Array.from(tagsSet);
+  const tagsSet = new Set<string>(allTodos.value.map(todo => todo.tag).flat());
+  if (searchTerm.value) {
+    return Array.from(tagsSet).filter(tag => tag.toLowerCase().includes(searchTerm.value.toLowerCase()));
+  } else {
+    return Array.from(tagsSet);
+  }
 });
 
 const filteredTodos = computed(() => {
@@ -44,13 +45,6 @@ const addTagToFilter = (tag: string) => {
 const removeTagFromFilter = (tag: string) => {
   selectedTags.value = selectedTags.value!.filter(t => t !== tag);
 };
-
-watch(searchTerm, (newSearch) => {
-  if (availableTags.value.includes(newSearch)) {
-    addTagToFilter(newSearch);
-    searchTerm.value = "";
-  }
-});
 
 const handleEnterKey = (event: KeyboardEvent) => {
   if (event.key === "Enter") {
