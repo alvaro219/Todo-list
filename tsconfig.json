@@ -2,6 +2,7 @@
   "extends": "./node_modules/@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
+    "jsx":"preserve",
     "target": "es2019",
     "lib": ["es2019", "dom"],
     "baseUrl": ".",

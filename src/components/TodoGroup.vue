@@ -91,7 +91,6 @@ const handleEnterKey = (event: KeyboardEvent, todo: any) => {
             </span>            
           </div>
           <div>
-            <!-- Agregamos el evento keyup para escuchar Enter y ejecutar addTag -->
             <input 
               type="text" 
               v-model="newTags[todo.id]" 
