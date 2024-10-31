@@ -103,17 +103,26 @@ const onDraggableChange = (payload: any) => {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 20px;
-  background-color: rgb(226, 226, 226);
-  width: 300px;
-  min-height: 350px;
-  border-radius: 8px;
+  padding: 12px;
+  background-color: #f4f5f7;
+  width: 280px;
+  min-height: 380px;
+  border-radius: 6px;
+  border: 1px solid #dfe1e6;
 }
 
 .draggable {
   flex-grow: 1;
   overflow-y: auto;
   padding-bottom: 10px;
+}
+
+.group-wrapper h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #5e6c84;
+  text-transform: uppercase;
+  margin-bottom: 10px;
 }
 
 .todo-container {
@@ -123,12 +132,18 @@ const onDraggableChange = (payload: any) => {
 
 .group-wrapper li {
   list-style-type: none;
-  background-color: aliceblue;
-  color: #000000;
-  padding: 2px 5px;
+  background-color: #ffffff;
+  color: #172b4d;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 2px rgba(9, 30, 66, 0.25);
   cursor: grab;
-  margin-bottom: 10px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
+}
+
+.group-wrapper li:hover {
+  background-color: #f0f0f0;
 }
 
 .darkened {
@@ -142,11 +157,23 @@ const onDraggableChange = (payload: any) => {
 }
 
 .todo-tag {
+  display: inline-block;
   font-size: 12px;
-  color: #ffffff;
-  padding: 6px;
+  color: #42526e;
+  background-color: #e2e4e7;
+  padding: 2px 6px;
   margin: 4px;
-  background-color: green;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.todo-tag button {
+  margin-left: 5px;
+  font-size: 10px;
+  color: #ff5a5f;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .todo-description {
