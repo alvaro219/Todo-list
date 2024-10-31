@@ -70,10 +70,12 @@ export default () => {
   };
 
   const deleteTodo = (todoToDelete: Todo) => {
-    todoStore[todoToDelete.status] = todoStore[todoToDelete.status].filter(
-      (todo) => todo.id !== todoToDelete.id
-    );
-  
+    Object.values(todoStore).forEach((todos) => {
+      const index = todos.findIndex((todo) => todo.id === todoToDelete.id);
+      if (index !== -1) {
+        todos.splice(index, 1);
+      }
+    });
     saveTodosToLocalStorage();
   };
   
