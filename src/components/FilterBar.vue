@@ -55,9 +55,10 @@ watch(searchTerm, (newSearch) => {
 
 <template>
   <div class="searcher-bar">
-    <input type="text" v-model="searchTerm" placeholder="Search any Tag" />
-    <button @click="addTagToFilter(searchTerm)">Add Tag</button>
-
+    <div class="searcher-box">
+      <input class="searcher-container" type="text" v-model="searchTerm" placeholder="Search any Tag" />
+      <button class="button-container" @click="addTagToFilter(searchTerm)">Add Tag</button>
+    </div>
     <div class="selected-tags">
       <span v-for="tag in selectedTags" :key="tag" class="tag">
         {{ tag }}
@@ -83,13 +84,51 @@ watch(searchTerm, (newSearch) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 85%;
   margin-bottom: 20px;
+}
+
+.searcher-box{
+  display: flex;
+ flex: 1;
+  justify-content: space-between;
 }
 
 .selected-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+}
+
+.searcher-container{
+  width: 100%;
+  flex: 1;
+  margin-right: 20px;
+  height: 30px;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  padding-left: 4px;
+  font-size: 20px;
+}
+
+.button-container{
+  width: 100px;
+  height: 30px;
+  flex: 0.2;
+  font-size: 16px;
+  background-color: #ffffff;
+  align-self: center;
+  border: 2px solid #000000;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.button-container:hover{
+  box-shadow: 5px 2px 2px #000000;
+  width: 120px;
+  height: 35px;
+  background-color: #eaffe6;
 }
 
 .tag, .tag-option {
@@ -103,6 +142,7 @@ watch(searchTerm, (newSearch) => {
 .available-tags {
   display: flex;
   flex-wrap: wrap;
+  max-width: 900px;
   gap: 5px;
 }
 </style>
