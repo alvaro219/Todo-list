@@ -91,22 +91,40 @@ const onDraggableChange = (payload: any) => {
       </template>
     </Draggable>
 
-    <CreateTodo :status="props.status" />
+    <div class="todo-container">
+      <CreateTodo :status="props.status" />
+    </div>
   </div>
 </template>
 
+
 <style scoped>
 .group-wrapper {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 20px;
-  background-color: rgb(56, 80, 103);
+  background-color: rgb(226, 226, 226);
   width: 300px;
+  min-height: 350px;
+  border-radius: 8px;
+}
+
+.draggable {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+.todo-container {
+  margin-top: auto;
+  border-radius: 8px;
 }
 
 .group-wrapper li {
   list-style-type: none;
   background-color: aliceblue;
-  color: rgb(56, 80, 103);
+  color: #000000;
   padding: 2px 5px;
   cursor: grab;
   margin-bottom: 10px;
@@ -118,10 +136,6 @@ const onDraggableChange = (payload: any) => {
   background-color: grey !important;
 }
 
-.draggable {
-  min-height: 200px;
-}
-
 .delete-icon {
   float: right;
   cursor: pointer;
@@ -129,9 +143,14 @@ const onDraggableChange = (payload: any) => {
 
 .todo-tag {
   font-size: 12px;
+  color: #ffffff;
+  padding: 6px;
+  margin: 4px;
+  background-color: green;
 }
 
 .todo-description {
+  margin-top: 4px;
   font-size: 12px;
 }
 </style>

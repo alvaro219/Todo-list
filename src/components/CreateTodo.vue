@@ -43,8 +43,9 @@ const handleOnSubmit = () => {
 </script>
 
 <template>
-  <div>
+  <div class="todo-container">
     <h3 
+      class="adder"
       style="cursor: pointer"
       v-if="!shouldDisplayForm"
       @click="shouldDisplayForm = !shouldDisplayForm"
@@ -73,3 +74,19 @@ const handleOnSubmit = () => {
     </template>
   </div>
 </template>
+
+<style scoped>
+.todo-container{
+  bottom: 0;
+}
+.adder {
+  justify-content: space-around;
+  background-color: #ffffff;
+  border: 2px solid black;
+  text-align: center;
+  transition: 0.2s ease-in-out;
+}
+.adder:hover{
+    background-color: #cacaca;
+}
+</style>
