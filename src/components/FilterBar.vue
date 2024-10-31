@@ -97,7 +97,6 @@ const handleEnterKey = (event: KeyboardEvent) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 85%;
   margin-bottom: 20px;
 }
 
