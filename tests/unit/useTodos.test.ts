@@ -7,6 +7,7 @@ describe("useTodos", () => {
 
   beforeEach(() => {
     store = useTodos();
+
   });
 
   it("debería inicializar el store con datos predeterminados si no hay datos en localStorage", () => {

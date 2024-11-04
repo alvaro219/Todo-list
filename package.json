@@ -7,10 +7,13 @@
     "preview": "vite preview --port 4173",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "vitest": "vitest"
   },
   "dependencies": {
     "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.8.3",
+    "jsdom": "^25.0.1",
     "vitest": "^2.1.4",
     "vue": "^3.4.0",
     "vuedraggable": "^4.1.0"

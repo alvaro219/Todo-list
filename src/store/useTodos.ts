@@ -8,7 +8,7 @@ interface TodoStore {
 }
 
 const loadTodosFromLocalStorage = (): TodoStore => {
-  const savedTodos = localStorage.getItem("todos");
+  const savedTodos = window.localStorage.getItem("todos");
   if (savedTodos) {
     try {
       return JSON.parse(savedTodos);
